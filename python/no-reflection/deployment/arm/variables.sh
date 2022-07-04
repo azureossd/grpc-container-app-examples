@@ -1,0 +1,6 @@
+CONTAINERAPPS_ENVIRONMENT=containerappenvironment
+LOCATION=eastus
+RESOURCE_GROUP=my-rg
+AZURE_CONTAINER_REGISTRY_USERNAME=myContainerRegistry
+AZURE_CONTAINER_REGISTRY_PASSWORD=myContainerRegistryPassword
+AZURE_CONTAINER_REGISTRY_SERVER=mycontainerregistry.azurecr.io
