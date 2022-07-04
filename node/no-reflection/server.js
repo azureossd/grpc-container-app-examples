@@ -7,7 +7,7 @@ import * as protoLoader from "@grpc/proto-loader";
 
 const PROTO_PATH = "./hello.proto";
 const port = process.env.PORT || 50051;
-const host = process.env.HOST || "localhost";
+const host = process.env.HOST || "0.0.0.0";
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
@@ -19,6 +19,7 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 const hello_proto = loadPackageDefinition(packageDefinition).greetingpackage;
 
 // Implements the Greeting RPC method.
+// Callback argument is required, 1st is optional
 const greeting = (_, callback) => {
   callback(null, { message: "Hello, from grpc-stack-examples-node-no-reflection" });
 }
