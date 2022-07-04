@@ -1,0 +1,137 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.2.30886",
+      "templateHash": "15724693754651397615"
+    }
+  },
+  "parameters": {
+    "environment_name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "azureContainerRegistryUsername": {
+      "type": "string"
+    },
+    "azureContainerRegistryServer": {
+      "type": "string"
+    },
+    "azureContainerRegistryPassword": {
+      "type": "secureString"
+    }
+  },
+  "variables": {
+    "logAnalyticsWorkspaceName": "[format('logs-{0}', parameters('environment_name'))]",
+    "appInsightsName": "[format('appins-{0}', parameters('environment_name'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2021-06-01",
+      "name": "[variables('logAnalyticsWorkspaceName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "retentionInDays": 30,
+        "features": {
+          "searchVersion": 1
+        },
+        "sku": {
+          "name": "PerGB2018"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('appInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.App/managedEnvironments",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('environment_name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "daprAIInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').InstrumentationKey]",
+        "appLogsConfiguration": {
+          "destination": "log-analytics",
+          "logAnalyticsConfiguration": {
+            "customerId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName')), '2021-06-01').customerId]",
+            "sharedKey": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName')), '2021-06-01').primarySharedKey]"
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.App/containerApps",
+      "apiVersion": "2022-03-01",
+      "name": "node-no-reflection",
+      "location": "[parameters('location')]",
+      "properties": {
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('environment_name'))]",
+        "configuration": {
+          "ingress": {
+            "external": true,
+            "targetPort": 50051,
+            "transport": "http2"
+          },
+          "secrets": [
+            {
+              "name": "azurecontainerregistrypassword",
+              "value": "[parameters('azureContainerRegistryPassword')]"
+            }
+          ],
+          "registries": [
+            {
+              "server": "[parameters('azureContainerRegistryServer')]",
+              "username": "[parameters('azureContainerRegistryUsername')]",
+              "passwordSecretRef": "azurecontainerregistrypassword"
+            }
+          ]
+        },
+        "template": {
+          "containers": [
+            {
+              "image": "[format('{0}/yourimage:latest', parameters('azureContainerRegistryServer'))]",
+              "name": "yourimage",
+              "env": [
+                {
+                  "name": "HOST",
+                  "value": "0.0.0.0"
+                }
+              ],
+              "resources": {
+                "cpu": "[json('0.5')]",
+                "memory": "1.0Gi"
+              }
+            }
+          ],
+          "scale": {
+            "minReplicas": 1,
+            "maxReplicas": 1
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.App/managedEnvironments', parameters('environment_name'))]"
+      ]
+    }
+  ]
+}

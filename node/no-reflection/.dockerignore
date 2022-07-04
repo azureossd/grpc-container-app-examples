@@ -131,3 +131,8 @@ dist
 
 # VSCode
 .vscode
+
+# Don't deploy the deployment files for BICEP/ARM
+./deployment/**
+./deployment/*
+deployment/

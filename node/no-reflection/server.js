@@ -7,7 +7,7 @@ import * as protoLoader from "@grpc/proto-loader";
 
 const PROTO_PATH = "./hello.proto";
 const port = process.env.PORT || 50051;
-const host = process.env.HOST || "0.0.0.0";
+const host = process.env.HOST || "localhost";
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
