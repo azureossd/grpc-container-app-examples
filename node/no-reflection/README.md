@@ -1,21 +1,14 @@
-# gRPC and Python - without reflection enabled
+# gRPC and Node - without reflection enabled
 
-The official quickstart can be found [here](https://grpc.io/docs/languages/python/quickstart/).
+The official quickstart can be found [here](https://grpc.io/docs/languages/node/quickstart/).
 
 ## Running the project
-### Create and activate the virtual environment
-Run the following:
-- `python -m venv .venv`
-- `source .venv/Scripts/activate` (Bash)
-
 ### Install the packages
 Run the following:
-- `pip install -r requirements.txt`
+- `yarn install` (or delete `yarn.lock` and run `npm install`)
 
 ### `proto` buffer code
-This is including in the project as `greeter_pb2_` files. These are not manually created. These are generated with the following command:
-
-- `python -m grpc_tools.protoc -I ./proto --python_out=. --grpc_python_out=. ./proto/greeter.proto`
+This example uses dynamic loading instead of compiling the protocol buffer prior to running code.
 
 ## Deployment
 
