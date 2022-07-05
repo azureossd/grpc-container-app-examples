@@ -26,7 +26,8 @@ public class GrpcServer {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
-        // Use stderr here since the logger may have been reset by its JVM shutdown hook.
+        // Use stderr here since the logger may have been reset by its JVM shutdown
+        // hook.
         System.err.println("*** shutting down gRPC server since JVM is shutting down");
         try {
           GrpcServer.this.stop();
@@ -45,7 +46,8 @@ public class GrpcServer {
   }
 
   /**
-   * Await termination on the main thread since the grpc library uses daemon threads.
+   * Await termination on the main thread since the grpc library uses daemon
+   * threads.
    */
   private void blockUntilShutdown() throws InterruptedException {
     if (server != null) {
@@ -62,11 +64,14 @@ public class GrpcServer {
     server.blockUntilShutdown();
   }
 
+
   static class GreeterImpl extends GreeterGrpc.GreeterImplBase {
 
     @Override
-    public void greeting(StreamObserver<HelloReply> responseObserver) {
-      HelloReply reply = HelloReply.newBuilder().setMessage("Hello from grpc-stack-examples-java-no-reflection").build();
+    // 'Empty' is the 'message' type set in Greeter.proto. Which is an empty message set with the RPC call
+    public void greeting(Empty req, StreamObserver<HelloReply> responseObserver) {
+      HelloReply reply = HelloReply.newBuilder().setMessage("Hello from grpc-stack-examples-java-no-reflection")
+          .build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }
