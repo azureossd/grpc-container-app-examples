@@ -3,6 +3,9 @@ package com.grpc.server;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+// Add for reflection support
+import io.grpc.protobuf.services.ProtoReflectionService;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -20,6 +23,8 @@ public class GrpcServer {
     int port = 50051;
     server = ServerBuilder.forPort(port)
         .addService(new GreeterImpl())
+        // Add for reflection support
+        .addService(ProtoReflectionService.newInstance())
         .build()
         .start();
     logger.info("Server started, listening on " + port);
@@ -64,13 +69,13 @@ public class GrpcServer {
     server.blockUntilShutdown();
   }
 
-
   static class GreeterImpl extends GreeterGrpc.GreeterImplBase {
 
     @Override
-    // 'Empty' is the 'message' type set in Greeter.proto. Which is an empty message set with the RPC call
+    // 'Empty' is the 'message' type set in Greeter.proto. Which is an empty message
+    // set with the RPC call
     public void greeting(Empty req, StreamObserver<HelloReply> responseObserver) {
-      HelloReply reply = HelloReply.newBuilder().setMessage("Hello from grpc-stack-examples-java-no-reflection")
+      HelloReply reply = HelloReply.newBuilder().setMessage("Hello from grpc-stack-examples-java-reflection")
           .build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
