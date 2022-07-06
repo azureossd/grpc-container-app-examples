@@ -47,8 +47,8 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   }
 }
 
-resource javanoreflection 'Microsoft.App/containerApps@2022-03-01' = {
-  name: 'java-no-reflection'
+resource javareflection 'Microsoft.App/containerApps@2022-03-01' = {
+  name: 'java-reflection'
   location: location
   properties: {
     managedEnvironmentId: environment.id
