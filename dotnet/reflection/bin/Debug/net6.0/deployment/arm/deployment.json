@@ -82,7 +82,7 @@
     {
       "type": "Microsoft.App/containerApps",
       "apiVersion": "2022-03-01",
-      "name": "java-reflection",
+      "name": "java-no-reflection",
       "location": "[parameters('location')]",
       "properties": {
         "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('environment_name'))]",
@@ -109,7 +109,7 @@
         "template": {
           "containers": [
             {
-              "image": "[format('{0}/grpcstackexamples-java-no-reflection:latest', parameters('azureContainerRegistryServer'))]",
+              "image": "[format('{0}/yourimage:latest', parameters('azureContainerRegistryServer'))]",
               "name": "yourimage",
               "env": [
                 {

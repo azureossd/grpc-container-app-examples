@@ -82,7 +82,7 @@
       {
         "type": "Microsoft.App/containerApps",
         "apiVersion": "2022-03-01",
-        "name": "python-no-reflection",
+        "name": "python-reflection",
         "location": "[parameters('location')]",
         "properties": {
           "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('environment_name'))]",

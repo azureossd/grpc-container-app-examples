@@ -47,8 +47,8 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   }
 }
 
-resource pythonreflection 'Microsoft.App/containerApps@2022-03-01' = {
-  name: 'python-reflection'
+resource dotnetreflection 'Microsoft.App/containerApps@2022-03-01' = {
+  name: 'dotnet-reflection'
   location: location
   properties: {
     managedEnvironmentId: environment.id
@@ -76,14 +76,8 @@ resource pythonreflection 'Microsoft.App/containerApps@2022-03-01' = {
     template: {
       containers: [
         {
-          image: '${azureContainerRegistryServer}/yourimage:latest'
+          image: '${azureContainerRegistryServer}/grpcstackexamples-dotnet-reflection:latest'
           name: 'yourimage'
-          env: [
-            {
-              name: 'HOST'
-              value: '0.0.0.0'
-            }
-          ]
           resources: {
             cpu: json('0.5')
             memory: '1.0Gi'
@@ -97,3 +91,4 @@ resource pythonreflection 'Microsoft.App/containerApps@2022-03-01' = {
     }
   }
 }
+
