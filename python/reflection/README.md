@@ -19,6 +19,8 @@ This is including in the project as `greeter_pb2_` files. These are not manually
 
 ## Deployment
 
+**Important**: If running as a container, locally, or on Azure Container Apps - ensure the `HOST` variable is set to 0.0.0.0 - otherwise this defaults to `localhost`.
+
 **Important**: First build the Image in this project and push it to your container registry. Update the BICEP or ARM files to point to this Image name.
 
 This can be deployed with the `deployments/` folder which contains an ARM and BICEP file for deploying either way.
