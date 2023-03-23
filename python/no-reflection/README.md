@@ -18,6 +18,7 @@ This is including in the project as `greeter_pb2_` files. These are not manually
 - `python -m grpc_tools.protoc -I ./proto --python_out=. --grpc_python_out=. ./proto/greeter.proto`
 
 ## Deployment
+**Important**: If running as a container, locally, or on Azure Container Apps - ensure the `HOST` variable is set to 0.0.0.0 - otherwise this defaults to `localhost`.
 
 **Important**: First build the Image in this project and push it to your container registry. Update the BICEP or ARM files to point to this Image name.
 
